@@ -115,7 +115,6 @@ class MakeDataSet:
 
                     # We calculate the malignancy information
                     malignancy, cancer_label = self.calculate_malignancy(nodule)
-
                     for nodule_slice in range(mask.shape[2]):
                         # This second for loop iterates over each single nodule.
                         # There are some mask sizes that are too small. These may hinder training.
