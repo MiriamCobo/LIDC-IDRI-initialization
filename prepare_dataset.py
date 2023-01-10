@@ -95,7 +95,10 @@ class MakeDataSet:
 
         for patient in tqdm(self.IDRI_list):
             pid = patient #LIDC-IDRI-0001~
-            scan = pl.query(pl.Scan).filter(pl.Scan.patient_id == pid).first()
+            scan = pl.query(pl.Scan).filter(pl.Scan.patient_id == pid, pl.Scan.slice_thickness <= 3).first()
+            # https://docs.sqlalchemy.org/en/14/orm/query.html#sqlalchemy.orm.Query.filter 
+            # Multiple criteria may be specified as comma separated; 
+            # the effect is that they will be joined together using the and_() function
             nodules_annotation = scan.cluster_annotations()
             vol = scan.to_volume()
             print("Patient ID: {} Dicom Shape: {} Number of Annotated Nodules: {}".format(pid,vol.shape,len(nodules_annotation)))
@@ -110,6 +113,8 @@ class MakeDataSet:
                 for nodule_idx, nodule in enumerate(nodules_annotation):
                 # Call nodule images. Each Patient will have at maximum 4 annotations as there are only 4 doctors
                 # This current for loop iterates over total number of nodules in a single patient
+                    if len(nodule)<1: # number of annotations for this nodule, at least there must be 1
+                        continue
                     mask, cbbox, masks = consensus(nodule,self.c_level,self.padding)
                     lung_np_array = vol[cbbox]
 
