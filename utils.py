@@ -49,7 +49,7 @@ def segment_lung(img):
     good_labels = []
     for prop in regions:
         B = prop.bbox
-        if B[2]-B[0]<475 and B[3]-B[1]<475 and B[0]>40 and B[2]<472:
+        if B[2]-B[0]<475 and B[3]-B[1]<475 and B[0]>40 and B[2]<472: # y esto por que? es como si no tuviese en cuenta los bordes o la regio exterior al pulmon
             good_labels.append(prop.label)
     mask = np.ndarray([512,512],dtype=np.int8)
     mask[:] = 0

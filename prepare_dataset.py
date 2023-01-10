@@ -114,7 +114,7 @@ class MakeDataSet:
                 # Call nodule images. Each Patient will have at maximum 4 annotations as there are only 4 doctors
                 # This current for loop iterates over total number of nodules in a single patient
                     if len(nodule)<1: # number of annotations for this nodule, at least there must be 1
-                        continue
+                        continue # habria que saltar al else para guardar en cualquier caso la imagen
                     mask, cbbox, masks = consensus(nodule,self.c_level,self.padding)
                     lung_np_array = vol[cbbox]
 
@@ -144,15 +144,15 @@ class MakeDataSet:
                 patient_clean_dir_mask = CLEAN_DIR_MASK / pid
                 Path(patient_clean_dir_image).mkdir(parents=True, exist_ok=True)
                 Path(patient_clean_dir_mask).mkdir(parents=True, exist_ok=True)
-                #There are patients that don't have nodule at all. Meaning, its a clean dataset. We need to use this for validation
+                #There are patients that don't have nodule at all. Meaning, it's a clean dataset. We need to use this for validation
                 for slice in range(vol.shape[2]):
                     if slice >50:
-                        break
+                        break ### y esto por que?
                     lung_segmented_np_array = segment_lung(vol[:,:,slice])
                     lung_segmented_np_array[lung_segmented_np_array==-0] =0
                     lung_mask = np.zeros_like(lung_segmented_np_array)
 
-                    #CN= CleanNodule, CM = CleanMask
+                    # CN= CleanNodule, CM = CleanMask
                     nodule_name = "{}/{}_CN001_slice{}".format(pid,pid[-4:],prefix[slice])
                     mask_name = "{}/{}_CM001_slice{}".format(pid,pid[-4:],prefix[slice])
                     meta_list = [pid[-4:],slice,prefix[slice],nodule_name,mask_name,0,False,True]
