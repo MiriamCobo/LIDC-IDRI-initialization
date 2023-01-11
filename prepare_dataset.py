@@ -91,7 +91,8 @@ class MakeDataSet:
         CLEAN_DIR_IMAGE = Path(self.clean_path_img)
         CLEAN_DIR_MASK = Path(self.clean_path_mask)
 
-
+        # count number of scans where slice_spacing does not match slice_thickness
+        count=0
 
         for patient in tqdm(self.IDRI_list):
             pid = patient #LIDC-IDRI-0001~
@@ -99,6 +100,10 @@ class MakeDataSet:
             # https://docs.sqlalchemy.org/en/14/orm/query.html#sqlalchemy.orm.Query.filter 
             # Multiple criteria may be specified as comma separated; 
             # the effect is that they will be joined together using the and_() function
+            # check slice_spacing
+            if scan.slice_spacing!=scan.slice_thickness:
+                count+=1
+                continue
             nodules_annotation = scan.cluster_annotations()
             vol = scan.to_volume()
             print("Patient ID: {} Dicom Shape: {} Number of Annotated Nodules: {}".format(pid,vol.shape,len(nodules_annotation)))
@@ -161,7 +166,7 @@ class MakeDataSet:
                     np.save(patient_clean_dir_mask / mask_name, lung_mask)
 
 
-
+        print("Number of scans that have been discarded due to inconsistent slice_spacing: "+str(count))
         print("Saved Meta data")
         self.meta.to_csv(self.meta_path+'meta_info.csv',index=False)
 

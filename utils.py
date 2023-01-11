@@ -71,6 +71,6 @@ def segment_lung(img):
     # mask consists of 1 and 0. Thus by mutliplying with the orginial image, sections with 1 will remain
     return mask*img
 
-
+# REVISAR
 def count_params(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
