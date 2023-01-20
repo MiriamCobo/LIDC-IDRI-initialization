@@ -100,10 +100,6 @@ class MakeDataSet:
             # https://docs.sqlalchemy.org/en/14/orm/query.html#sqlalchemy.orm.Query.filter 
             # Multiple criteria may be specified as comma separated; 
             # the effect is that they will be joined together using the and_() function
-            # check slice_spacing
-            if scan.slice_spacing!=scan.slice_thickness:
-                count+=1
-                continue
             nodules_annotation = scan.cluster_annotations()
             vol = scan.to_volume()
             print("Patient ID: {} Dicom Shape: {} Number of Annotated Nodules: {}".format(pid,vol.shape,len(nodules_annotation)))

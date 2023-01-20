@@ -2,6 +2,9 @@
 data/
 figures/
 LIDC-IDRI/
+LIDC-IDRI_derived/
+LIDC-IDRI_tables/
+LIDC_conversion5-tables/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
